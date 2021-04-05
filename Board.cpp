@@ -1,8 +1,9 @@
 #include <iostream>
+#include <climits>
 #include "Board.hpp"
 using namespace std;
 
-ariel::Board::Board(): start_of_row(0),end_of_row(0),start_of_colomn(0),end_of_colomn(0){}
+ariel::Board::Board(): start_of_row(UINT_MAX),end_of_row(0),start_of_colomn(UINT_MAX),end_of_colomn(0){}
 
 void ariel::Board::post(unsigned int row, unsigned int col, Direction direction, const string &str){
 
@@ -85,36 +86,39 @@ string ariel::Board::read(unsigned int row,unsigned int col, Direction direction
         }
         return result;
         
-    }else{
-        if(row >= this->board.size()){
-            for(size_t i = 0; i<len;i++){
-                result +='_';
-            }
-            return result;
+    }
+    if(row >= this->board.size()){
+        for(size_t i = 0; i<len;i++){
+            result +='_';
         }
-        unsigned int i=0;
-        for(;i<len && row+i<this->board.size(); i++){
-            if(this->board.at(row+i).size() <= col){
-                result += '_';
-            }else{
-                result += this->board.at(row+i).at(col);
-            }
+        return result;
+    }
+    unsigned int i=0;
+    for(;i<len && row+i<this->board.size(); i++){
+        if(this->board.at(row+i).size() <= col){
+            result += '_';
+        }else{
+            result += this->board.at(row+i).at(col);
         }
-        if(i < len){
-            for(;i<len;i++){
-                result +='_';
-            }
+    }
+    if(i < len){
+        for(;i<len;i++){
+            result +='_';
         }
-        return result;    
-    }    
+    }
+        return result;       
 }
 
 void ariel::Board::show()const{
-    cout<<this->board.size()<<endl;
-    cout<<this->board.at(0).size()<<endl;
-    for(unsigned int i=0; i<this->board.size();i++){
-        for(unsigned int j=0;j<this->board.at(i).size(); j++){
+    for(unsigned int i=start_of_row; i<end_of_row;i++){
+        unsigned int j=start_of_colomn;
+        for(;j<end_of_colomn && j < board.at(i).size(); j++){
             cout<<this->board.at(i).at(j);
+        }
+        if(j<end_of_colomn){
+            for(;j<end_of_colomn;j++){
+                cout<<'_';
+            }
         }
         cout<<endl;
     }
