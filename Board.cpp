@@ -1,84 +1,59 @@
-#include "Board.hpp"
 #include <iostream>
+#include "Board.hpp"
 using namespace std;
 
 ariel::Board::Board(): start_of_row(0),end_of_row(0),start_of_colomn(0),end_of_colomn(0){}
 
 void ariel::Board::post(unsigned int row, unsigned int col, Direction direction, const string &str){
-    if(this->board.empty()){
-        if(direction == Direction::Horizontal){
-            this->board.resize((row+1));
-            unsigned int size = col+str.size();
-            this->board.at(row).resize(size,'_');
-            for(unsigned int i=0; i<str.size(); i++){
-                this->board.at(row).at(i+col) = str.at(i);
-            }
+
+    if(direction == Direction::Horizontal){
+        if(this->board.size()<=row){
+            this->board.resize(row+1);
+        }
+        unsigned int size = col+str.size();
+
+        if(this->board.at(row).size() < size){
+        this->board.at(row).resize(size,'_');
+        }
+        for(unsigned int i=0; i<str.size(); i++){
+            this->board.at(row).at(col+i) = str.at(i);
+        }
+        if(row < this->start_of_row){
             this->start_of_row = row;
+        }
+        if(row > this->end_of_row){
             this->end_of_row = row;
+        }
+        if(this->start_of_colomn > col){
             this->start_of_colomn = col;
+        }
+        if(size > this->end_of_colomn){
             this->end_of_colomn = size;
-        }else{
-            unsigned int size = row+str.size();
+        }           
+    }else{
+        unsigned int size = row+str.size();
+        if(this->board.size()<size){
             this->board.resize(size);
-            for(unsigned int i=0; i<str.size(); i++){
+        }
+        for(unsigned int i=0;i<str.size();i++){
+            if(this->board.at(row+i).size()<=col){
                 this->board.at(row+i).resize(col+1,'_');
-                this->board.at(row+i).at(col) = str.at(i);
             }
+            this->board.at(row+i).at(col) = str.at(i);
+        }
+        if(row<this->start_of_row){
             this->start_of_row = row;
+        }
+        if(size > this->end_of_row){
             this->end_of_row = size;
+        }
+        if(this->start_of_colomn > col){
             this->start_of_colomn = col;
+        }
+        if(this->end_of_colomn < col){    
             this->end_of_colomn = col;
         }
-    }else{
-        if(direction == Direction::Horizontal){
-            if(this->board.size()<=row){
-                this->board.resize(row+1);
-            }
-            unsigned int size = col+str.size();
-
-            if(this->board.at(row).size() < size){
-                this->board.at(row).resize(size,'_');
-            }
-            for(unsigned int i=0; i<str.size(); i++){
-                this->board.at(row).at(col+i) = str.at(i);
-            }
-            if(row < this->start_of_row){
-                this->start_of_row = row;
-            }
-            if(row > this->end_of_row){
-                this->end_of_row = row;
-            }
-            if(this->start_of_colomn > col){
-                this->start_of_colomn = col;
-            }
-            if(size > this->end_of_colomn){
-                this->end_of_colomn = size;
-            }           
-        }else{
-            unsigned int size = row+str.size();
-            if(this->board.size()<size){
-                this->board.resize(size);
-            }
-            for(unsigned int i=0;i<str.size();i++){
-                if(this->board.at(row+i).size()<=col){
-                    this->board.at(row+i).resize(col+1,'_');
-                }
-                this->board.at(row+i).at(col) = str.at(i);
-            }
-            if(row<this->start_of_row){
-                this->start_of_row = row;
-            }
-            if(size > this->end_of_row){
-                this->end_of_row = size;
-            }
-            if(this->start_of_colomn > col){
-                this->start_of_colomn = col;
-            }
-            if(this->end_of_colomn < col){    
-                   this->end_of_colomn = col;
-            }
-        }
-    }
+    }   
 }
 
 string ariel::Board::read(unsigned int row,unsigned int col, Direction direction, unsigned int len){
