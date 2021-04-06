@@ -11,7 +11,6 @@ namespace ariel{
     private:
         std::vector<std::vector<char>> board;
         uint start_of_row;
-        uint end_of_row;
         uint start_of_colomn;
         uint end_of_colomn; 
     public:

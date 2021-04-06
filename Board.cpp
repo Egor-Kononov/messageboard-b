@@ -3,7 +3,7 @@
 #include "Board.hpp"
 using namespace std;
 
-ariel::Board::Board(): start_of_row(UINT_MAX),end_of_row(0),start_of_colomn(UINT_MAX),end_of_colomn(0){}
+ariel::Board::Board(): start_of_row(UINT_MAX),start_of_colomn(UINT_MAX),end_of_colomn(0){}
 
 void ariel::Board::post(unsigned int row, unsigned int col, Direction direction, const string &str){
 
@@ -21,9 +21,6 @@ void ariel::Board::post(unsigned int row, unsigned int col, Direction direction,
         }
         if(row < this->start_of_row){
             this->start_of_row = row;
-        }
-        if(row > this->end_of_row){
-            this->end_of_row = row;
         }
         if(this->start_of_colomn > col){
             this->start_of_colomn = col;
@@ -44,9 +41,6 @@ void ariel::Board::post(unsigned int row, unsigned int col, Direction direction,
         }
         if(row<this->start_of_row){
             this->start_of_row = row;
-        }
-        if(size > this->end_of_row){
-            this->end_of_row = size;
         }
         if(this->start_of_colomn > col){
             this->start_of_colomn = col;
@@ -86,31 +80,32 @@ string ariel::Board::read(unsigned int row,unsigned int col, Direction direction
         }
         return result;
         
-    }
-    if(row >= this->board.size()){
-        for(size_t i = 0; i<len;i++){
-            result +='_';
+    }else{
+        if(row >= this->board.size()){
+            for(size_t i = 0; i<len;i++){
+                result +='_';
+            }
+            return result;
         }
-        return result;
-    }
-    unsigned int i=0;
-    for(;i<len && row+i<this->board.size(); i++){
-        if(this->board.at(row+i).size() <= col){
-            result += '_';
-        }else{
-            result += this->board.at(row+i).at(col);
+        unsigned int i=0;
+        for(;i<len && row+i<this->board.size(); i++){
+            if(this->board.at(row+i).size() <= col){
+                result += '_';
+            }else{
+                result += this->board.at(row+i).at(col);
+            }   
         }
-    }
-    if(i < len){
-        for(;i<len;i++){
-            result +='_';
+        if(i < len){
+            for(;i<len;i++){
+                result +='_';
+            }
         }
     }
         return result;       
 }
 
 void ariel::Board::show()const{
-    for(unsigned int i=start_of_row; i<end_of_row;i++){
+    for(unsigned int i=start_of_row; i<board.size();i++){
         unsigned int j=start_of_colomn;
         for(;j<end_of_colomn && j < board.at(i).size(); j++){
             cout<<this->board.at(i).at(j);
@@ -122,6 +117,7 @@ void ariel::Board::show()const{
         }
         cout<<endl;
     }
+    cout<<endl;
 }
 
 
